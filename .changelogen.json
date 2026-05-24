@@ -1,0 +1,11 @@
+{
+  "types": {
+    "feat": { "title": "Features" },
+    "fix": { "title": "Bug Fixes" },
+    "perf": { "title": "Performance" },
+    "refactor": { "title": "Refactors" },
+    "docs": { "title": "Documentation" },
+    "chore": { "title": "Chores" },
+    "test": { "title": "Tests" }
+  }
+}
