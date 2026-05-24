@@ -1,6 +1,7 @@
 ---
 name: test-plan-generate
 description: Generate an automation-first test plan for the given feature with a focus on speed, accessibility, and reliability.
+version: 0.1.0
 ---
 
 # Test Plan Generate Skill
