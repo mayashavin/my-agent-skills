@@ -1,0 +1,30 @@
+{
+  "name": "my-agent-skills",
+  "version": "0.1.0",
+  "description": "A collection of reusable skills for Claude Code agents",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src/ tests/",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "validate": "tsx src/validate.ts",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "claude-code",
+    "ai-skills",
+    "agent-skills"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "eslint": "^9.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}
