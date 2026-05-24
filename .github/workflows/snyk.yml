@@ -6,8 +6,10 @@ on:
 
 jobs:
   security:
-    if: ${{ !github.event.pull_request.head.repo.fork && secrets.SNYK_TOKEN != '' }}
+    if: ${{ github.event.pull_request.head.repo.fork == false }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -15,7 +17,18 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Check for Snyk token
+        id: snyk-token
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          if [ -n "$SNYK_TOKEN" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
       - uses: snyk/actions/node@9adf32b1121593767fc3c057af55b55db032dc04
+        if: steps.snyk-token.outputs.present == 'true'
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
