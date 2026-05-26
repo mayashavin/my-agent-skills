@@ -1,12 +1,8 @@
-import { readFileSync, readdirSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { readFileSync, readdirSync, statSync } from "node:fs";
+import { join, basename, resolve } from "node:path";
 import type { Skill, SkillFrontmatter, ValidationResult } from "./types.js";
 
-const REQUIRED_FIELDS: (keyof SkillFrontmatter)[] = [
-  "name",
-  "description",
-  "version",
-];
+const REQUIRED_FIELDS: (keyof SkillFrontmatter)[] = ["description"];
 
 function parseFrontmatter(content: string): {
   frontmatter: Record<string, unknown>;
@@ -54,8 +50,27 @@ export function validateSkill(filePath: string): ValidationResult {
 export function validateAllSkills(
   skillsDir: string = resolve("skills")
 ): ValidationResult[] {
-  const files = readdirSync(skillsDir).filter((f) => f.endsWith(".md"));
-  return files.map((f) => validateSkill(join(skillsDir, f)));
+  const entries = readdirSync(skillsDir);
+  const results: ValidationResult[] = [];
+
+  for (const entry of entries) {
+    const entryPath = join(skillsDir, entry);
+    if (statSync(entryPath).isDirectory()) {
+      const skillFile = join(entryPath, "SKILL.md");
+      try {
+        statSync(skillFile);
+        results.push(validateSkill(skillFile));
+      } catch {
+        results.push({
+          valid: false,
+          skill: entry,
+          errors: [`Missing SKILL.md in skills/${entry}/`],
+        });
+      }
+    }
+  }
+
+  return results;
 }
 
 if (process.argv[1] && import.meta.url.endsWith(process.argv[1])) {

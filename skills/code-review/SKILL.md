@@ -1,8 +1,5 @@
 ---
-name: code-review
 description: Review code changes for correctness, style, and potential issues
-version: 0.1.0
-tags: [review, quality]
 ---
 
 # Code Review
