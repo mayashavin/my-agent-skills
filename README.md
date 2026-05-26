@@ -7,11 +7,11 @@ A collection of reusable skills for Claude Code agents.
 ### As a Claude Code plugin
 
 ```
-/plugin marketplace add mayashavin/my-agent-skills
-/plugin install ariyu@my-agent-skills
+/plugin marketplace add mayashavin/ariyu-agent-skills
+/plugin install ariyu-agent-skills@ariyu-agent-skills
 ```
 
-Skills are then available as `/ariyu:code-review`, `/ariyu:test-plan-generate`, etc.
+Skills are then available as `/ariyu-agent-skills:code-review`, `/ariyu-agent-skills:test-plan-generate`, etc.
 
 ### As standalone skills (no prefix)
 
@@ -71,7 +71,7 @@ Instructions for the agent to follow when this skill is invoked.
 ### API
 
 ```typescript
-import { validateSkill, validateAllSkills } from "ariyu";
+import { validateSkill, validateAllSkills } from "ariyu-agent-skills";
 
 const result = validateSkill("skills/code-review/SKILL.md");
 // { valid: true, skill: "code-review", errors: [] }
