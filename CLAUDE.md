@@ -1,10 +1,11 @@
-# my-agent-skills
+# Ariyu - Agent Skills
 
-A collection of reusable skills for Claude Code agents.
+A Claude Code plugin providing reusable skills for AI agents.
 
 ## Project structure
 
-- `skills/` — Skill definitions as markdown files with YAML frontmatter
+- `.claude-plugin/` — Plugin manifest and marketplace config
+- `skills/` — Skill definitions as `skills/<name>/SKILL.md`
 - `src/` — TypeScript utilities for validating and managing skills
 - `tests/` — Vitest test suite
 
@@ -17,14 +18,11 @@ A collection of reusable skills for Claude Code agents.
 
 ## Skill format
 
-Each skill is a `.md` file in `skills/` with required frontmatter:
+Each skill is a `SKILL.md` file inside `skills/<skill-name>/` with required frontmatter:
 
 ```yaml
 ---
-name: skill-name
 description: What the skill does
-version: 0.1.0
-tags: [optional, tags]
 ---
 ```
 

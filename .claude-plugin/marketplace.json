@@ -1,0 +1,30 @@
+{
+  "version": "1",
+  "marketplaces": [
+    {
+      "name": "my-agent-skills",
+      "displayName": "Ariyu Agent Skills",
+      "description": "A collection of reusable skills for Claude Code agents",
+      "homepage": "https://github.com/mayashavin/my-agent-skills",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/mayashavin/my-agent-skills.git"
+      },
+      "plugins": [
+        {
+          "name": "ariyu",
+          "displayName": "Ariyu",
+          "description": "A collection of reusable skills for Claude Code agents",
+          "version": "0.1.0",
+          "author": "Maya Shavin",
+          "homepage": "https://github.com/mayashavin/my-agent-skills",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/mayashavin/my-agent-skills.git",
+            "path": "."
+          }
+        }
+      ]
+    }
+  ]
+}
