@@ -1,5 +1,5 @@
 {
-  "name": "ariyu-agent-skills",
+  "name": "maya-agent-skills",
   "owner": {
     "name": "Maya Shavin"
   },
@@ -8,7 +8,7 @@
   },
   "plugins": [
     {
-      "name": "ariyu-agent-skills",
+      "name": "agent-skills",
       "source": "./",
       "description": "A collection of reusable skills for Claude Code agents"
     }
