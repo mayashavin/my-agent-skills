@@ -41,8 +41,9 @@ export function validateSkill(filePath: string): ValidationResult {
   }
 
   const name = frontmatter.name as string | undefined;
+  const dir = basename(dirname(filePath));
   const skillName =
-    name?.trim() ? name.trim() : basename(dirname(filePath));
+    name?.trim() ? name.trim() : dir !== "." ? dir : basename(filePath, ".md");
 
   return {
     valid: errors.length === 0,
@@ -58,34 +59,11 @@ export function validateAllSkills(
   const results: ValidationResult[] = [];
 
   for (const entry of entries) {
-    if (!entry.isDirectory()) {
-      results.push({
-        valid: false,
-        skill: entry.name,
-        errors: [`Unexpected non-directory entry: ${entry.name}`],
-      });
-      continue;
-    }
+    if (!entry.isDirectory()) continue;
 
     const skillFile = join(skillsDir, entry.name, "SKILL.md");
     try {
-      const content = readFileSync(skillFile, "utf-8");
-      const { frontmatter, body } = parseFrontmatter(content);
-      const errors: string[] = [];
-
-      for (const field of REQUIRED_FIELDS) {
-        if (!frontmatter[field]) {
-          errors.push(`Missing required frontmatter field: ${field}`);
-        }
-      }
-      if (!body.trim()) {
-        errors.push("Skill body is empty");
-      }
-
-      const name = frontmatter.name as string | undefined;
-      const skillName = name?.trim() ? name.trim() : entry.name;
-
-      results.push({ valid: errors.length === 0, skill: skillName, errors });
+      results.push(validateSkill(skillFile));
     } catch {
       results.push({
         valid: false,
