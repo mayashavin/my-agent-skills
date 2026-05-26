@@ -1,5 +1,5 @@
 {
-  "name": "my-agent-skills",
+  "name": "agent-skills",
   "version": "0.1.0",
   "description": "A collection of reusable skills for Claude Code agents",
   "type": "module",

@@ -1,0 +1,16 @@
+{
+  "name": "maya-agent-skills",
+  "owner": {
+    "name": "Maya Shavin"
+  },
+  "metadata": {
+    "description": "A collection of reusable skills for Claude Code agents"
+  },
+  "plugins": [
+    {
+      "name": "agent-skills",
+      "source": "./",
+      "description": "A collection of reusable skills for Claude Code agents"
+    }
+  ]
+}

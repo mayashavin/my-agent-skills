@@ -1,0 +1,11 @@
+{
+  "name": "agent-skills",
+  "description": "A collection of reusable skills for Claude Code agents",
+  "author": {
+    "name": "Maya Shavin"
+  },
+  "homepage": "https://github.com/mayashavin/agent-skills",
+  "repository": "https://github.com/mayashavin/agent-skills",
+  "license": "MIT",
+  "skills": "./skills"
+}

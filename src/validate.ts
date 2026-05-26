@@ -1,12 +1,8 @@
 import { readFileSync, readdirSync } from "node:fs";
-import { join, resolve } from "node:path";
-import type { Skill, SkillFrontmatter, ValidationResult } from "./types.js";
+import { join, dirname, basename, resolve } from "node:path";
+import type { SkillFrontmatter, ValidationResult } from "./types.js";
 
-const REQUIRED_FIELDS: (keyof SkillFrontmatter)[] = [
-  "name",
-  "description",
-  "version",
-];
+const REQUIRED_FIELDS: (keyof SkillFrontmatter)[] = ["description"];
 
 function parseFrontmatter(content: string): {
   frontmatter: Record<string, unknown>;
@@ -44,9 +40,16 @@ export function validateSkill(filePath: string): ValidationResult {
     errors.push("Skill body is empty");
   }
 
+  const name = frontmatter.name as string | undefined;
+  const fileName = basename(filePath);
+  const dir = basename(dirname(filePath));
+  const fallbackSkillName =
+    fileName === "SKILL.md" && dir !== "." ? dir : basename(filePath, ".md");
+  const skillName = name?.trim() ? name.trim() : fallbackSkillName;
+
   return {
     valid: errors.length === 0,
-    skill: (frontmatter.name as string) ?? filePath,
+    skill: skillName,
     errors,
   };
 }
@@ -54,8 +57,33 @@ export function validateSkill(filePath: string): ValidationResult {
 export function validateAllSkills(
   skillsDir: string = resolve("skills")
 ): ValidationResult[] {
-  const files = readdirSync(skillsDir).filter((f) => f.endsWith(".md"));
-  return files.map((f) => validateSkill(join(skillsDir, f)));
+  const entries = readdirSync(skillsDir, { withFileTypes: true });
+  const results: ValidationResult[] = [];
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+
+    const skillFile = join(skillsDir, entry.name, "SKILL.md");
+    try {
+      results.push(validateSkill(skillFile));
+    } catch {
+      results.push({
+        valid: false,
+        skill: entry.name,
+        errors: [`Missing or unreadable SKILL.md in ${join(skillsDir, entry.name)}`],
+      });
+    }
+  }
+
+  if (results.length === 0) {
+    results.push({
+      valid: false,
+      skill: skillsDir,
+      errors: ["No skills found"],
+    });
+  }
+
+  return results;
 }
 
 if (process.argv[1] && import.meta.url.endsWith(process.argv[1])) {

@@ -1,7 +1,7 @@
 export interface SkillFrontmatter {
-  name: string;
   description: string;
-  version: string;
+  name?: string;
+  version?: string;
   tags?: string[];
   author?: string;
 }

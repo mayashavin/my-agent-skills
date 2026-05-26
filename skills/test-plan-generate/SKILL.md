@@ -1,7 +1,5 @@
 ---
-name: test-plan-generate
 description: Generate an automation-first test plan for the given feature with a focus on speed, accessibility, and reliability.
-version: 0.1.0
 ---
 
 # Test Plan Generate Skill
@@ -117,36 +115,36 @@ After user approval, generate a list of GitHub issues for the given representati
 
 ### Critical Limits
 
-- Write 12–18 representative test specifications.
-  - Q1: 3–5
-  - Q2: 3–5
-  - Q3: 4–6
-  - Q4: 2–3
+- Write 12-18 representative test specifications.
+  - Q1: 3-5
+  - Q2: 3-5
+  - Q3: 4-6
+  - Q4: 2-3
 - These tests should be representative of the feature and the most critical tests. User can expand the list if needed.
 
 ### Efficiency Rules
 
 - Prefer user-provided context. Only inspect attached files when necessary.
-- DO NOT generate excessive tests; only 12–18 representative examples.
+- DO NOT generate excessive tests; only 12-18 representative examples.
 - DO NOT generate 100+ issues, only 20-30 key issues.
 - DO use templates - standard structure for test plans and issues.
 - BE concise and to the point.
 
 ### Output Rules
 
-- Target output: 150–300 lines.
-- Key tests: 12–18 tests specs.
-- Key issues: 20–30 issues.
+- Target output: 150-300 lines.
+- Key tests: 12-18 tests specs.
+- Key issues: 20-30 issues.
 - Focus: represent the test scenarios, not enumerate all tests.
 
 ## Success Criteria
 
-👍 **Good** if:
+**Good** if:
   - All test quadrants are represented.
   - All instruction sections presented and followed.
   - Output is concise and actionable.
 
-👎 **Bad** if:
+**Bad** if:
   - Missing any critical sections.
   - Arbitrary or excessive output.
   - Output does not follow the rules.
