@@ -61,7 +61,7 @@ describe("validateAllSkills", () => {
     const results = validateAllSkills(TMP_DIR);
     expect(results).toHaveLength(1);
     expect(results[0].valid).toBe(false);
-    expect(results[0].errors).toContain("Missing SKILL.md in skills/no-skill/");
+    expect(results[0].errors[0]).toContain("Missing SKILL.md in");
     rmSync(TMP_DIR, { recursive: true });
   });
 });

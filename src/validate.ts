@@ -1,5 +1,5 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join, basename, resolve } from "node:path";
+import { join, dirname, basename, resolve } from "node:path";
 import type { Skill, SkillFrontmatter, ValidationResult } from "./types.js";
 
 const REQUIRED_FIELDS: (keyof SkillFrontmatter)[] = ["description"];
@@ -40,9 +40,12 @@ export function validateSkill(filePath: string): ValidationResult {
     errors.push("Skill body is empty");
   }
 
+  const skillName =
+    (frontmatter.name as string) ?? basename(dirname(filePath));
+
   return {
     valid: errors.length === 0,
-    skill: (frontmatter.name as string) ?? filePath,
+    skill: skillName,
     errors,
   };
 }
@@ -58,13 +61,21 @@ export function validateAllSkills(
     if (statSync(entryPath).isDirectory()) {
       const skillFile = join(entryPath, "SKILL.md");
       try {
-        statSync(skillFile);
+        const stat = statSync(skillFile);
+        if (!stat.isFile()) {
+          results.push({
+            valid: false,
+            skill: entry,
+            errors: [`${join(entry, "SKILL.md")} exists but is not a file`],
+          });
+          continue;
+        }
         results.push(validateSkill(skillFile));
       } catch {
         results.push({
           valid: false,
           skill: entry,
-          errors: [`Missing SKILL.md in skills/${entry}/`],
+          errors: [`Missing SKILL.md in ${join(skillsDir, entry)}/`],
         });
       }
     }
