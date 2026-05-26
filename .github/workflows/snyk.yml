@@ -1,0 +1,26 @@
+name: Snyk Security
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  security:
+    if: ${{ github.event.pull_request.head.repo.fork == false }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+        if: ${{ secrets.SNYK_TOKEN != '' }}
+      - uses: snyk/actions/node@9adf32b1121593767fc3c057af55b55db032dc04
+        if: ${{ secrets.SNYK_TOKEN != '' }}
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
