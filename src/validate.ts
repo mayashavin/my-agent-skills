@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join, dirname, basename, resolve } from "node:path";
 import type { Skill, SkillFrontmatter, ValidationResult } from "./types.js";
 
@@ -40,8 +40,9 @@ export function validateSkill(filePath: string): ValidationResult {
     errors.push("Skill body is empty");
   }
 
+  const name = frontmatter.name as string | undefined;
   const skillName =
-    (frontmatter.name as string) ?? basename(dirname(filePath));
+    name?.trim() ? name.trim() : basename(dirname(filePath));
 
   return {
     valid: errors.length === 0,
@@ -53,32 +54,53 @@ export function validateSkill(filePath: string): ValidationResult {
 export function validateAllSkills(
   skillsDir: string = resolve("skills")
 ): ValidationResult[] {
-  const entries = readdirSync(skillsDir);
+  const entries = readdirSync(skillsDir, { withFileTypes: true });
   const results: ValidationResult[] = [];
 
   for (const entry of entries) {
-    const entryPath = join(skillsDir, entry);
-    if (statSync(entryPath).isDirectory()) {
-      const skillFile = join(entryPath, "SKILL.md");
-      try {
-        const stat = statSync(skillFile);
-        if (!stat.isFile()) {
-          results.push({
-            valid: false,
-            skill: entry,
-            errors: [`${join(entry, "SKILL.md")} exists but is not a file`],
-          });
-          continue;
-        }
-        results.push(validateSkill(skillFile));
-      } catch {
-        results.push({
-          valid: false,
-          skill: entry,
-          errors: [`Missing SKILL.md in ${join(skillsDir, entry)}/`],
-        });
-      }
+    if (!entry.isDirectory()) {
+      results.push({
+        valid: false,
+        skill: entry.name,
+        errors: [`Unexpected non-directory entry: ${entry.name}`],
+      });
+      continue;
     }
+
+    const skillFile = join(skillsDir, entry.name, "SKILL.md");
+    try {
+      const content = readFileSync(skillFile, "utf-8");
+      const { frontmatter, body } = parseFrontmatter(content);
+      const errors: string[] = [];
+
+      for (const field of REQUIRED_FIELDS) {
+        if (!frontmatter[field]) {
+          errors.push(`Missing required frontmatter field: ${field}`);
+        }
+      }
+      if (!body.trim()) {
+        errors.push("Skill body is empty");
+      }
+
+      const name = frontmatter.name as string | undefined;
+      const skillName = name?.trim() ? name.trim() : entry.name;
+
+      results.push({ valid: errors.length === 0, skill: skillName, errors });
+    } catch {
+      results.push({
+        valid: false,
+        skill: entry.name,
+        errors: [`Missing or unreadable SKILL.md in ${join(skillsDir, entry.name)}/`],
+      });
+    }
+  }
+
+  if (results.length === 0) {
+    results.push({
+      valid: false,
+      skill: skillsDir,
+      errors: ["No skills found"],
+    });
   }
 
   return results;
