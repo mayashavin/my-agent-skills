@@ -1,4 +1,4 @@
-# Ariyu - Agent Skills
+# Maya Agent Skills
 
 A collection of reusable skills for Claude Code agents.
 
