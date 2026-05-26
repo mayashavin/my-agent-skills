@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join, dirname, basename, resolve } from "node:path";
-import type { Skill, SkillFrontmatter, ValidationResult } from "./types.js";
+import type { SkillFrontmatter, ValidationResult } from "./types.js";
 
 const REQUIRED_FIELDS: (keyof SkillFrontmatter)[] = ["description"];
 
@@ -41,9 +41,11 @@ export function validateSkill(filePath: string): ValidationResult {
   }
 
   const name = frontmatter.name as string | undefined;
+  const fileName = basename(filePath);
   const dir = basename(dirname(filePath));
-  const skillName =
-    name?.trim() ? name.trim() : dir !== "." ? dir : basename(filePath, ".md");
+  const fallbackSkillName =
+    fileName === "SKILL.md" && dir !== "." ? dir : basename(filePath, ".md");
+  const skillName = name?.trim() ? name.trim() : fallbackSkillName;
 
   return {
     valid: errors.length === 0,
@@ -68,7 +70,7 @@ export function validateAllSkills(
       results.push({
         valid: false,
         skill: entry.name,
-        errors: [`Missing or unreadable SKILL.md in ${join(skillsDir, entry.name)}/`],
+        errors: [`Missing or unreadable SKILL.md in ${join(skillsDir, entry.name)}`],
       });
     }
   }
