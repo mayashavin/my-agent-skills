@@ -17,18 +17,9 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Check for Snyk token
-        id: snyk-token
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        run: |
-          if [ -n "$SNYK_TOKEN" ]; then
-            echo "present=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "present=false" >> "$GITHUB_OUTPUT"
-          fi
+        if: ${{ secrets.SNYK_TOKEN != '' }}
       - uses: snyk/actions/node@9adf32b1121593767fc3c057af55b55db032dc04
-        if: steps.snyk-token.outputs.present == 'true'
+        if: ${{ secrets.SNYK_TOKEN != '' }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
